@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios"
 import { useEffect, useState } from "react"
+import DataSource from "@/app/utils/DataSource";
 
 export default function SongDetail ({songId}) {
   const [songImage, setSongImage] = useState("/img/carousel.jpg");
@@ -10,27 +10,17 @@ export default function SongDetail ({songId}) {
   const [songReleaseDate, setSongReleaseDate] = useState("{song Release Date}");
 
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      url: 'https://genius-song-lyrics1.p.rapidapi.com/song/details/',
-      params: {id: songId},
-      headers: {
-        'X-RapidAPI-Key': '23c27277e8msh562052692ac9df2p12d122jsn829fe59935c5',
-        'X-RapidAPI-Host': 'genius-song-lyrics1.p.rapidapi.com'
+    async function fetchData () {
+      const songDetailData = await DataSource.getSongDetail(songId);
+      if(songDetailData) {
+        setSongImage(songDetailData.header_image_url);
+        setSongTitle(songDetailData.title);
+        setSongArtist(songDetailData.artist_names);
+        setSongAlbum(songDetailData.album.name);
+        setSongReleaseDate(songDetailData.release_date_for_display);
       }
-    };
-    axios.request(options)
-    .then(res => {
-      const songDetailData = res.data.song;
-      setSongImage(songDetailData.header_image_url);
-      setSongTitle(songDetailData.title);
-      setSongArtist(songDetailData.artist_names);
-      setSongAlbum(songDetailData.album.name);
-      setSongReleaseDate(songDetailData.release_date_for_display)
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    }
+    fetchData();
   },[])
 
   return (
