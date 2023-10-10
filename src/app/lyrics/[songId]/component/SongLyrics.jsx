@@ -1,30 +1,19 @@
 "use client";
-import { useEffect, useState } from "react"
-import axios from "axios";
-
+import { useEffect, useState, useContext } from "react"
+import { LoadingContext } from "../page";
+import DataSource from "@/app/utils/DataSource";
 
 export default function SongLyrics ({songId}) {
   const [songLyrics, setSongLyrics] = useState("");
+  const setLoadingShow = useContext(LoadingContext);
 
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      url: 'https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/',
-      params: {id: songId},
-      headers: {
-        'X-RapidAPI-Key': '23c27277e8msh562052692ac9df2p12d122jsn829fe59935c5',
-        'X-RapidAPI-Host': 'genius-song-lyrics1.p.rapidapi.com'
-      }
-    };
-    
-    axios.request(options)
-    .then(res => {
-      const lyrics = res.data.lyrics.lyrics.body.html;
+    async function fetchData() {
+      const lyrics = await DataSource.getSongLyrics(songId);
       setSongLyrics(lyrics);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+      setLoadingShow(false);
+    }
+    fetchData();
   },[])
 
   return (
