@@ -40,7 +40,7 @@ Here are steps to install and run this project to your computer locally :
     ```
       npm install
     ```
-3. Create .env.local file in root folder and write this following code :
+3. Create `.env.local` file in root folder and write this following code :
 
    ```
    NEXT_PUBLIC_API_KEY="[YOUR_API_KEY]"
